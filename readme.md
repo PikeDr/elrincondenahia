@@ -20,3 +20,15 @@
 1. Clona el repositorio en tu máquina local:
    ```bash
    git clone https://github.com/tuusuario/elrincondenahia.git
+
+2. **Navegar a la carpeta del proyecto**:
+   - Una vez clonado, entra en la carpeta del proyecto:
+   ```bash
+   cd elrincondenahia
+
+3. **Abrir el juego**:
+   - Abre el archivo `index.html` en tu navegador favorito. También puedes desplegarlo localmente usando una extensión como "Live Server" en VSCode.
+
+4. **Jugar en línea**:
+   - Puedes acceder al juego directamente en línea a través de [GitHub Pages](https://pikedr.github.io/elrincondenahia/).
+
