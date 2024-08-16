@@ -1,0 +1,142 @@
+/* assets/css/general.css */
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    text-align: center;
+    background-color: #f0f8ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    width: 100%;
+    max-width: 600px;
+    padding: 20px;
+    background-color: #fefbd8;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 80%;
+}
+
+.title-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.profile-img {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.title {
+    position: absolute;
+    color: #ff6347;
+    font-size: 2em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.menu button, .level-selector button, .next-button, .end-button {
+    font-size: 1.5em;
+    padding: 15px 25px;
+    background-color: #32cd32;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+    color: white;
+    margin: 10px;
+    box-shadow: 0 4px #228b22;
+    width: 100%;
+    max-width: 300px;
+}
+
+.menu button:hover, .level-selector button:hover, .next-button:hover, .end-button:hover {
+    background-color: #228b22;
+}
+
+.menu button i, .level-selector button i {
+    margin-right: 10px;
+}
+
+.question {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    color: #ff6347;
+}
+
+.options {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.options button {
+    font-size: 2em;
+    padding: 15px 25px;
+    background-color: #ffcccb;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+    box-shadow: 0 4px #d32f2f;
+    width: 100%;
+    max-width: 150px;
+}
+
+.options button:hover {
+    background-color: #ff8a80;
+}
+
+.message {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    color: #2e8b57;
+}
+
+.game-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .title {
+        font-size: 1.5em;
+    }
+
+    .profile-img {
+        width: 120px;
+        height: 120px;
+    }
+
+    .title-container {
+        margin-bottom: 10px;
+    }
+
+    .menu button, .level-selector button, .next-button, .end-button {
+        font-size: 1.2em;
+    }
+
+    .question {
+        font-size: 2em;
+    }
+
+    .options button {
+        font-size: 1.5em;
+        max-width: 100%;
+    }
+}

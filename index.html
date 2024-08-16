@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El rincón de Nahia</title>
+    <link rel="stylesheet" href="assets/css/general.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="title-container">
+            <img src="assets/images/imagen01.webp" alt="El rincón de Nahia" class="profile-img">
+            <h1 class="title">El rincón de Nahia</h1>
+        </div>
+        <div id="menu" class="menu">
+            <button onclick="startGame('letters')">
+                <i class="bi bi-fonts"></i> Encontrar Letras
+            </button>
+            <button onclick="startGame('numbers')">
+                <i class="bi bi-123"></i> Encontrar Números
+            </button>
+            <button onclick="startGame('addition')">
+                <i class="bi bi-plus-circle"></i> Sumas
+            </button>
+            <button onclick="startGame('subtraction')">
+                <i class="bi bi-dash-circle"></i> Restas
+            </button>
+        </div>
+        <!-- Resto del contenido del juego -->
+        <div id="game" class="game" style="display:none;">
+            <div id="level-selector" class="level-selector">
+                <h2>Selecciona un Nivel</h2>
+                <button onclick="selectLevel(1)">Nivel 1</button>
+                <button onclick="selectLevel(2)">Nivel 2</button>
+                <button onclick="selectLevel(3)">Nivel 3</button>
+            </div>
+
+            <div id="question" class="question"></div>
+            <div id="options" class="options"></div>
+            <div id="message" class="message"></div>
+            <div class="game-buttons">
+                <button id="next" class="next-button" onclick="nextQuestion()">Siguiente</button>
+                <button id="end-game" class="end-button" onclick="endGame()">Terminar Juego</button>
+            </div>
+        </div>
+    </div>
+    <script src="assets/js/general.js"></script>
+</body>
+</html>
