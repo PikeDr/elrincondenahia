@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <!-- ... resto del head ... -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>El rincón de Nahia</title>
@@ -26,6 +27,13 @@
             <button onclick="startGame('subtraction')">
                 <i class="bi bi-dash-circle"></i> Restas
             </button>
+            <!-- Nuevas secciones -->
+            <button onclick="startGame('multiplication')">
+                <i class="bi bi-x-circle"></i> Multiplicaciones
+            </button>
+            <button onclick="startGame('mentalAgility')">
+                <i class="bi bi-lightning-fill"></i> Agilidad Mental
+            </button>
         </div>
         <!-- Resto del contenido del juego -->
         <div id="game" class="game" style="display:none;">
@@ -36,9 +44,18 @@
                 <button onclick="selectLevel(3)">Nivel 3</button>
             </div>
 
+            <!-- Nuevo contenedor para el progreso -->
+            <div id="progress" class="progress"></div>
+
             <div id="question" class="question"></div>
             <div id="options" class="options"></div>
             <div id="message" class="message"></div>
+
+            <!-- Añadimos la barra de progreso del tiempo -->
+            <div id="time-bar" class="time-bar">
+                <div id="time-bar-inner" class="time-bar-inner"></div>
+            </div>
+
             <div class="game-buttons">
                 <button id="next" class="next-button" onclick="nextQuestion()">Siguiente</button>
                 <button id="end-game" class="end-button" onclick="endGame()">Terminar Juego</button>
