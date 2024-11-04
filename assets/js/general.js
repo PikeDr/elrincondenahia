@@ -4,32 +4,21 @@ let currentGame = '';
 let currentLevel = 1;
 let currentQuestionIndex = 0;
 let score = 0;
+let timer;
+let timeLeft;
 
 const games = {
     letters: {
-        1: [
-            { question: 'Encuentra la letra A', correct: 'A', options: ['A', 'B', 'C'] },
-            { question: 'Encuentra la letra B', correct: 'B', options: ['D', 'E', 'B'] },
-            { question: 'Encuentra la letra C', correct: 'C', options: ['C', 'D', 'E'] },
-            { question: 'Encuentra la letra D', correct: 'D', options: ['D', 'E', 'F'] },
-            { question: 'Encuentra la letra E', correct: 'E', options: ['G', 'E', 'H'] },
-        ],
-        2: [
-            { question: 'Encuentra la letra F', correct: 'F', options: ['F', 'I', 'J'] },
-            { question: 'Encuentra la letra G', correct: 'G', options: ['G', 'H', 'I'] },
-            { question: 'Encuentra la letra H', correct: 'H', options: ['H', 'J', 'K'] },
-            { question: 'Encuentra la letra I', correct: 'I', options: ['I', 'L', 'M'] },
-            { question: 'Encuentra la letra J', correct: 'J', options: ['J', 'K', 'L'] },
-        ],
-        3: [
-            { question: 'Encuentra la letra K', correct: 'K', options: ['K', 'L', 'M'] },
-            { question: 'Encuentra la letra L', correct: 'L', options: ['L', 'M', 'N'] },
-            { question: 'Encuentra la letra M', correct: 'M', options: ['M', 'N', 'O'] },
-            { question: 'Encuentra la letra N', correct: 'N', options: ['N', 'O', 'P'] },
-            { question: 'Encuentra la letra O', correct: 'O', options: ['O', 'P', 'Q'] },
-        ]
+        1: [],
+        2: [],
+        3: []
     },
     numbers: {
+        1: [],
+        2: [],
+        3: []
+    },
+    addition: {
         1: [],
         2: [],
         3: []
@@ -38,29 +27,120 @@ const games = {
         1: [],
         2: [],
         3: []
+    },
+    multiplication: {
+        1: [],
+        2: [],
+        3: []
+    },
+    mentalAgility: {
+        1: [],
+        2: [],
+        3: []
     }
 };
 
-// Generar preguntas aleatorias para los juegos de números y restas
-function generateRandomNumberQuestions(level, numberOfQuestions, operation = 'addition') {
-    const min = level === 1 ? 1 : level === 2 ? 1 : 1;
+// Generar preguntas para "Encontrar Letras"
+function generateLetterQuestions(level, numberOfQuestions) {
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    const questions = [];
+
+    for (let i = 0; i < numberOfQuestions; i++) {
+        const correctLetter = letters[getRandomInt(0, letters.length - 1)];
+        const options = generateLetterOptions(correctLetter);
+
+        questions.push({
+            question: `Encuentra la letra ${correctLetter}`,
+            correct: correctLetter,
+            options: shuffleArray(options)
+        });
+    }
+
+    return questions;
+}
+
+// Generar opciones para letras
+function generateLetterOptions(correctLetter) {
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    const options = new Set();
+    options.add(correctLetter);
+
+    while (options.size < 3) {
+        const randomLetter = letters[getRandomInt(0, letters.length - 1)];
+        if (randomLetter !== correctLetter) {
+            options.add(randomLetter);
+        }
+    }
+
+    return Array.from(options);
+}
+
+// Generar preguntas para "Encontrar Números"
+function generateNumberQuestions(level, numberOfQuestions) {
+    const min = level === 1 ? 1 : level === 2 ? 10 : 50;
     const max = level === 1 ? 10 : level === 2 ? 50 : 100;
-    
+    const questions = [];
+
+    for (let i = 0; i < numberOfQuestions; i++) {
+        const correctNumber = getRandomInt(min, max);
+        const options = generateNumberOptions(correctNumber, min, max);
+
+        questions.push({
+            question: `Encuentra el número ${correctNumber}`,
+            correct: correctNumber.toString(),
+            options: shuffleArray(options.map(num => num.toString()))
+        });
+    }
+
+    return questions;
+}
+
+// Generar opciones para números
+function generateNumberOptions(correctNumber, min, max) {
+    const options = new Set();
+    options.add(correctNumber);
+
+    while (options.size < 3) {
+        const option = getRandomInt(min, max);
+        if (option !== correctNumber) {
+            options.add(option);
+        }
+    }
+
+    return Array.from(options);
+}
+
+// Generar preguntas aleatorias para operaciones matemáticas
+function generateRandomMathQuestions(level, numberOfQuestions, operation) {
+    const min = level === 1 ? 1 : level === 2 ? 10 : 50;
+    const max = level === 1 ? 10 : level === 2 ? 50 : 100;
+
     const questions = [];
 
     for (let i = 0; i < numberOfQuestions; i++) {
         const num1 = getRandomInt(min, max);
-        const num2 = getRandomInt(min, num1); // Asegurarse de que num2 <= num1 para restas
+        const num2 = operation === 'subtraction' ? getRandomInt(min, num1) : getRandomInt(min, max);
 
-        const correctAnswer = operation === 'addition' ? num1 + num2 : num1 - num2;
+        let correctAnswer;
+        let questionText;
+
+        if (operation === 'addition') {
+            correctAnswer = num1 + num2;
+            questionText = `¿Cuánto es ${num1} + ${num2}?`;
+        } else if (operation === 'subtraction') {
+            correctAnswer = num1 - num2;
+            questionText = `¿Cuánto es ${num1} - ${num2}?`;
+        } else if (operation === 'multiplication') {
+            correctAnswer = num1 * num2;
+            questionText = `¿Cuánto es ${num1} × ${num2}?`;
+        }
+
         const options = generateOptions(correctAnswer, min, max);
 
         questions.push({
-            question: operation === 'addition' 
-                ? `¿Cuánto es ${num1} + ${num2}?` 
-                : `¿Cuánto es ${num1} - ${num2}?`,
+            question: questionText,
             correct: correctAnswer.toString(),
-            options: options.map(num => num.toString())
+            options: shuffleArray(options.map(num => num.toString()))
         });
     }
 
@@ -78,10 +158,22 @@ function generateOptions(correctAnswer, min, max) {
     options.add(correctAnswer);
 
     while (options.size < 3) {
-        options.add(getRandomInt(min, max));
+        const option = getRandomInt(min, max * 2); // Aumentar rango para opciones incorrectas
+        if (option !== correctAnswer) {
+            options.add(option);
+        }
     }
 
     return Array.from(options);
+}
+
+// Función para mezclar un array (Fisher-Yates Shuffle)
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = getRandomInt(0, i);
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
 }
 
 function startGame(gameType) {
@@ -93,6 +185,8 @@ function startGame(gameType) {
     document.getElementById('options').style.display = 'none';
     document.getElementById('next').style.display = 'none';
     document.getElementById('end-game').style.display = 'none';
+    document.getElementById('message').textContent = '';
+    document.getElementById('progress').textContent = '';
 }
 
 function selectLevel(level) {
@@ -100,10 +194,18 @@ function selectLevel(level) {
     currentQuestionIndex = 0;
     score = 0;
 
-    if (currentGame === 'numbers') {
-        games.numbers[level] = generateRandomNumberQuestions(level, 10);
-    } else if (currentGame === 'subtraction') {
-        games.subtraction[level] = generateRandomNumberQuestions(level, 10, 'subtraction');
+    const numberOfQuestions = 20; // Usar 20 preguntas
+
+    if (currentGame === 'letters') {
+        games.letters[level] = generateLetterQuestions(level, numberOfQuestions);
+    } else if (currentGame === 'numbers') {
+        games.numbers[level] = generateNumberQuestions(level, numberOfQuestions);
+    } else if (['addition', 'subtraction', 'multiplication', 'mentalAgility'].includes(currentGame)) {
+        let operation = currentGame;
+        if (currentGame === 'numbers') operation = 'addition';
+        if (currentGame === 'mentalAgility') operation = getRandomOperation();
+
+        games[currentGame][level] = generateRandomMathQuestions(level, numberOfQuestions, operation);
     }
 
     document.getElementById('level-selector').style.display = 'none';
@@ -115,8 +217,15 @@ function selectLevel(level) {
 }
 
 function loadQuestion() {
+    clearInterval(timer);
+    startTimer();
+
     const currentQuestion = games[currentGame][currentLevel][currentQuestionIndex];
     document.getElementById('question').textContent = currentQuestion.question;
+
+    // Mostrar el progreso
+    const progress = document.getElementById('progress');
+    progress.textContent = `Pregunta ${currentQuestionIndex + 1} de ${games[currentGame][currentLevel].length}`;
 
     const optionsContainer = document.getElementById('options');
     optionsContainer.innerHTML = ''; // Limpiar opciones previas
@@ -132,28 +241,31 @@ function loadQuestion() {
 function checkAnswer(selected) {
     const currentQuestion = games[currentGame][currentLevel][currentQuestionIndex];
     const message = document.getElementById('message');
-    
+
     if (selected === currentQuestion.correct) {
         message.innerHTML = '<i class="bi bi-check-circle" style="color: green;"></i> ¡Correcto!';
         score++;
     } else {
-        message.innerHTML = '<i class="bi bi-x-circle" style="color: red;"></i> Inténtalo de nuevo.';
+        message.innerHTML = '<i class="bi bi-x-circle" style="color: red;"></i> Incorrecto.';
     }
+
+    clearInterval(timer);
 }
 
 function nextQuestion() {
     currentQuestionIndex++;
     if (currentQuestionIndex >= games[currentGame][currentLevel].length) {
-        if (currentLevel < 3) {
-            currentLevel++;
-            currentQuestionIndex = 0;
-            selectLevel(currentLevel); // Avanzar al siguiente nivel
-        } else {
-            document.getElementById('question').textContent = `¡Juego terminado! Tu puntaje es: ${score}/${games[currentGame][currentLevel].length * 3}`;
-            document.getElementById('options').style.display = 'none';
-            document.getElementById('next').style.display = 'none';
-            document.getElementById('end-game').style.display = 'none';
-        }
+        // Mostrar puntaje final
+        document.getElementById('question').textContent = `¡Juego terminado! Tu puntaje es: ${score}/${games[currentGame][currentLevel].length}`;
+        document.getElementById('options').style.display = 'none';
+        document.getElementById('next').style.display = 'none';
+        document.getElementById('end-game').style.display = 'none';
+        document.getElementById('message').textContent = '';
+        document.getElementById('progress').textContent = '';
+        const timeBarInner = document.getElementById('time-bar-inner');
+        timeBarInner.style.width = '0%';
+        timeBarInner.style.transition = 'none';
+        clearInterval(timer);
     } else {
         document.getElementById('message').textContent = '';
         loadQuestion();
@@ -173,11 +285,53 @@ function resetGame() {
     document.getElementById('question').textContent = '';
     document.getElementById('options').innerHTML = '';
     document.getElementById('message').textContent = '';
+    document.getElementById('progress').textContent = '';
     document.getElementById('level-selector').style.display = 'block';
     document.getElementById('next').style.display = 'none';
     document.getElementById('end-game').style.display = 'none';
+    const timeBarInner = document.getElementById('time-bar-inner');
+    timeBarInner.style.width = '0%';
+    timeBarInner.style.transition = 'none';
     currentQuestionIndex = 0;
     score = 0;
+    clearInterval(timer);
+}
+
+function startTimer() {
+    const timeLimits = { 1: 5, 2: 7, 3: 10 };
+    timeLeft = timeLimits[currentLevel];
+
+    const message = document.getElementById('message');
+    message.textContent = `Tiempo restante: ${timeLeft} segundos`;
+
+    const timeBarInner = document.getElementById('time-bar-inner');
+
+    // Reiniciar la barra de progreso y establecer la duración de la transición
+    timeBarInner.style.width = '100%';
+    timeBarInner.style.transition = `width ${timeLeft}s linear`;
+
+    // Iniciar la transición de la barra de progreso
+    setTimeout(() => {
+        timeBarInner.style.width = '0%';
+    }, 50); // Pequeño retraso para asegurar que la transición ocurra
+
+    timer = setInterval(() => {
+        timeLeft--;
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            message.innerHTML = '<i class="bi bi-x-circle" style="color: red;"></i> Tiempo agotado.';
+            // Pasar automáticamente a la siguiente pregunta después de un breve retraso
+            setTimeout(nextQuestion, 1000);
+        } else {
+            message.textContent = `Tiempo restante: ${timeLeft} segundos`;
+        }
+    }, 1000);
+}
+
+// Función para obtener una operación aleatoria para Agilidad Mental
+function getRandomOperation() {
+    const operations = ['addition', 'subtraction', 'multiplication'];
+    return operations[Math.floor(Math.random() * operations.length)];
 }
 
 window.onload = () => {
