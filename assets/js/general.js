@@ -184,14 +184,22 @@ function shuffleArray(array) {
 
 function startGame(gameType) {
     currentGame = gameType;
-    document.getElementById('menu').style.display = 'none';
+    // Ocultamos la página de inicio y mostramos el juego
+    document.getElementById('home').style.display = 'none';
     document.getElementById('game').style.display = 'block';
+
+    // Mostrar el selector de nivel
     document.getElementById('level-selector').style.display = 'block';
+
+    // Ocultar elementos que no deben mostrarse aún
     document.getElementById('question').style.display = 'none';
     document.getElementById('options').style.display = 'none';
-    //document.getElementById('end-game').style.display = 'none';
-    document.getElementById('message').textContent = '';
-    document.getElementById('progress').textContent = '';
+    document.getElementById('progress').style.display = 'none'; // Ocultar el progreso
+    document.getElementById('time-bar').style.display = 'none'; // Ocultar la barra de tiempo
+
+    // Asegurarnos de que el botón "Siguiente" y "Terminar Juego" estén ocultos
+    document.getElementById('next').style.display = 'none';
+    document.getElementById('end-game').style.display = 'none';
 }
 
 function selectLevel(level) {
@@ -213,10 +221,21 @@ function selectLevel(level) {
         games[currentGame][level] = generateRandomMathQuestions(level, numberOfQuestions, operation);
     }
 
+    // Ocultamos el selector de nivel
     document.getElementById('level-selector').style.display = 'none';
+
+    // Mostramos los elementos del juego
     document.getElementById('question').style.display = 'block';
     document.getElementById('options').style.display = 'flex';
+    document.getElementById('progress').style.display = 'block'; // Mostrar el progreso
+    document.getElementById('time-bar').style.display = 'block'; // Mostrar la barra de tiempo
+
+    // Mostrar el botón "Terminar Juego"
     document.getElementById('end-game').style.display = 'block';
+
+    // Ocultar el botón "Siguiente" ya que el avance es automático
+    document.getElementById('next').style.display = 'none';
+    
     loadQuestion();
 }
 
@@ -228,8 +247,10 @@ function loadQuestion() {
     document.getElementById('question').textContent = currentQuestion.question;
 
     // Mostrar el progreso
+    document.getElementById('progress').style.display = 'block';
     const progress = document.getElementById('progress');
     progress.textContent = `Pregunta ${currentQuestionIndex + 1} de ${games[currentGame][currentLevel].length}`;
+
 
     const optionsContainer = document.getElementById('options');
     optionsContainer.innerHTML = ''; // Limpiar opciones previas
@@ -245,6 +266,8 @@ function loadQuestion() {
     const timeBarInner = document.getElementById('time-bar-inner');
     timeBarInner.style.width = '100%';
     timeBarInner.style.transition = 'none';
+    document.getElementById('time-bar').style.display = 'block'; // Asegurarnos de que la barra de tiempo esté visible
+
 
     // Iniciar temporizador después de cargar todo
     setTimeout(() => {
@@ -310,6 +333,16 @@ function nextQuestion() {
         }).then(() => {
             endGame();
         });
+
+         // Ocultar elementos innecesarios
+        document.getElementById('question').style.display = 'none';
+        document.getElementById('options').style.display = 'none';
+        document.getElementById('progress').style.display = 'none';
+        document.getElementById('time-bar').style.display = 'none';
+        document.getElementById('end-game').style.display = 'none';
+
+        clearInterval(timer);
+        
     } else {
         loadQuestion();
     }
