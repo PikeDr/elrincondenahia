@@ -6,6 +6,7 @@ let currentQuestionIndex = 0;
 let score = 0;
 let timer;
 let timeLeft;
+let hasAnswered = false;
 
 const games = {
     letters: {
@@ -42,16 +43,20 @@ const games = {
 
 // Generar preguntas para "Encontrar Letras"
 function generateLetterQuestions(level, numberOfQuestions) {
-    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    const letters = 'abcdefghijklmnopqrstuvwxyz'.split(''); // Usar letras minúsculas para las opciones
+    const lettersUpper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''); // Usar letras mayúsculas para la pregunta
     const questions = [];
 
     for (let i = 0; i < numberOfQuestions; i++) {
-        const correctLetter = letters[getRandomInt(0, letters.length - 1)];
-        const options = generateLetterOptions(correctLetter);
+        const randomIndex = getRandomInt(0, letters.length - 1);
+        const correctLetterLower = letters[randomIndex]; // Letra en minúscula para las opciones
+        const correctLetterUpper = lettersUpper[randomIndex]; // Letra en mayúscula para la pregunta
+
+        const options = generateLetterOptions(correctLetterLower);
 
         questions.push({
-            question: `Encuentra la letra ${correctLetter}`,
-            correct: correctLetter,
+            question: `Encuentra la letra "${correctLetterUpper}"`,
+            correct: correctLetterLower, // La respuesta correcta es en minúscula
             options: shuffleArray(options)
         });
     }
@@ -61,7 +66,7 @@ function generateLetterQuestions(level, numberOfQuestions) {
 
 // Generar opciones para letras
 function generateLetterOptions(correctLetter) {
-    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    const letters = 'abcdefghijklmnopqrstuvwxyz'.split(''); // Usar letras minúsculas
     const options = new Set();
     options.add(correctLetter);
 
@@ -154,13 +159,14 @@ function getRandomInt(min, max) {
 
 // Generar opciones con la respuesta correcta y otras dos incorrectas
 function generateOptions(correctAnswer, min, max) {
+    const letters = 'abcdefghijklmnopqrstuvwxyz'.split(''); // Usar letras minúsculas
     const options = new Set();
-    options.add(correctAnswer);
+    options.add(correctLetter);
 
     while (options.size < 3) {
-        const option = getRandomInt(min, max * 2); // Aumentar rango para opciones incorrectas
-        if (option !== correctAnswer) {
-            options.add(option);
+        const randomLetter = letters[getRandomInt(0, letters.length - 1)];
+        if (randomLetter !== correctLetter) {
+            options.add(randomLetter);
         }
     }
 
@@ -183,7 +189,6 @@ function startGame(gameType) {
     document.getElementById('level-selector').style.display = 'block';
     document.getElementById('question').style.display = 'none';
     document.getElementById('options').style.display = 'none';
-    document.getElementById('next').style.display = 'none';
     document.getElementById('end-game').style.display = 'none';
     document.getElementById('message').textContent = '';
     document.getElementById('progress').textContent = '';
@@ -211,14 +216,13 @@ function selectLevel(level) {
     document.getElementById('level-selector').style.display = 'none';
     document.getElementById('question').style.display = 'block';
     document.getElementById('options').style.display = 'flex';
-    document.getElementById('next').style.display = 'block';
     document.getElementById('end-game').style.display = 'block';
     loadQuestion();
 }
 
 function loadQuestion() {
     clearInterval(timer);
-    startTimer();
+    hasAnswered = false; // Reseteamos el estado de respuesta
 
     const currentQuestion = games[currentGame][currentLevel][currentQuestionIndex];
     document.getElementById('question').textContent = currentQuestion.question;
@@ -236,73 +240,119 @@ function loadQuestion() {
         button.onclick = () => checkAnswer(option);
         optionsContainer.appendChild(button);
     });
+
+    // Reiniciar mensaje y barra de progreso
+    const timeBarInner = document.getElementById('time-bar-inner');
+    timeBarInner.style.width = '100%';
+    timeBarInner.style.transition = 'none';
+
+    // Iniciar temporizador después de cargar todo
+    setTimeout(() => {
+        startTimer();
+    }, 100);
 }
 
 function checkAnswer(selected) {
+    if (hasAnswered) return; // Evitar que el usuario responda más de una vez
+    hasAnswered = true;
+
     const currentQuestion = games[currentGame][currentLevel][currentQuestionIndex];
-    const message = document.getElementById('message');
 
-    if (selected === currentQuestion.correct) {
-        message.innerHTML = '<i class="bi bi-check-circle" style="color: green;"></i> ¡Correcto!';
-        score++;
-    } else {
-        message.innerHTML = '<i class="bi bi-x-circle" style="color: red;"></i> Incorrecto.';
-    }
-
+    // Detener el temporizador y la barra de progreso
     clearInterval(timer);
+    const timeBarInner = document.getElementById('time-bar-inner');
+    timeBarInner.style.width = timeBarInner.offsetWidth + 'px'; // Fijar el ancho actual
+    timeBarInner.style.transition = 'none';
+
+    // Desactivar los botones para evitar múltiples clics
+    const optionButtons = document.querySelectorAll('#options button');
+    optionButtons.forEach(button => {
+        button.disabled = true;
+    });
+
+    // Mostrar mensaje con SweetAlert2
+    if (selected === currentQuestion.correct) {
+        score++;
+        Swal.fire({
+            icon: 'success',
+            title: '¡Correcto!',
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+        }).then(() => {
+            nextQuestion();
+        });
+    } else {
+        Swal.fire({
+            icon: 'error',
+            title: 'Incorrecto',
+            text: `La respuesta correcta era: ${currentQuestion.correct}`,
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+        }).then(() => {
+            nextQuestion();
+        });
+    }
 }
+
 
 function nextQuestion() {
     currentQuestionIndex++;
     if (currentQuestionIndex >= games[currentGame][currentLevel].length) {
-        // Mostrar puntaje final
-        document.getElementById('question').textContent = `¡Juego terminado! Tu puntaje es: ${score}/${games[currentGame][currentLevel].length}`;
-        document.getElementById('options').style.display = 'none';
-        document.getElementById('next').style.display = 'none';
-        document.getElementById('end-game').style.display = 'none';
-        document.getElementById('message').textContent = '';
-        document.getElementById('progress').textContent = '';
-        const timeBarInner = document.getElementById('time-bar-inner');
-        timeBarInner.style.width = '0%';
-        timeBarInner.style.transition = 'none';
-        clearInterval(timer);
+        // Mostrar puntaje final con opción de volver al menú principal
+        Swal.fire({
+            title: '¡Juego terminado!',
+            text: `Tu puntaje es: ${score}/${games[currentGame][currentLevel].length}`,
+            icon: 'info',
+            confirmButtonText: 'Volver al menú principal',
+            allowOutsideClick: false,
+        }).then(() => {
+            endGame();
+        });
     } else {
-        document.getElementById('message').textContent = '';
         loadQuestion();
     }
 }
 
 function endGame() {
-    const confirmEnd = confirm('¿Estás seguro de que deseas terminar el juego y volver al menú principal?');
-    if (confirmEnd) {
-        document.getElementById('game').style.display = 'none';
-        document.getElementById('menu').style.display = 'block';
-        resetGame();
-    }
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: '¿Deseas terminar el juego y volver al menú principal?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, terminar',
+        cancelButtonText: 'Continuar jugando',
+        reverseButtons: true,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('game').style.display = 'none';
+            document.getElementById('menu').style.display = 'block';
+            resetGame();
+        }
+    });
 }
 
 function resetGame() {
     document.getElementById('question').textContent = '';
     document.getElementById('options').innerHTML = '';
-    document.getElementById('message').textContent = '';
+    document.getElementById('options').style.display = 'none';
     document.getElementById('progress').textContent = '';
     document.getElementById('level-selector').style.display = 'block';
-    document.getElementById('next').style.display = 'none';
     document.getElementById('end-game').style.display = 'none';
     const timeBarInner = document.getElementById('time-bar-inner');
     timeBarInner.style.width = '0%';
     timeBarInner.style.transition = 'none';
     currentQuestionIndex = 0;
     score = 0;
+    hasAnswered = false;
     clearInterval(timer);
 }
+
 
 function startTimer() {
     const timeLimits = { 1: 5, 2: 7, 3: 10 };
     timeLeft = timeLimits[currentLevel];
-
-    const message = document.getElementById('message');
-    message.textContent = `Tiempo restante: ${timeLeft} segundos`;
 
     const timeBarInner = document.getElementById('time-bar-inner');
 
@@ -319,15 +369,34 @@ function startTimer() {
         timeLeft--;
         if (timeLeft <= 0) {
             clearInterval(timer);
-            message.innerHTML = '<i class="bi bi-x-circle" style="color: red;"></i> Tiempo agotado.';
-            // Pasar automáticamente a la siguiente pregunta después de un breve retraso
-            setTimeout(nextQuestion, 1000);
-        } else {
-            message.textContent = `Tiempo restante: ${timeLeft} segundos`;
+            if (!hasAnswered) {
+                hasAnswered = true;
+
+                // Detener la barra de progreso
+                timeBarInner.style.width = timeBarInner.offsetWidth + 'px'; // Fijar el ancho actual
+                timeBarInner.style.transition = 'none';
+
+                // Desactivar los botones
+                const optionButtons = document.querySelectorAll('#options button');
+                optionButtons.forEach(button => {
+                    button.disabled = true;
+                });
+
+                // Mostrar mensaje de tiempo agotado con SweetAlert2
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Tiempo agotado',
+                    text: `La respuesta correcta era: ${games[currentGame][currentLevel][currentQuestionIndex].correct}`,
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: true,
+                }).then(() => {
+                    nextQuestion();
+                });
+            }
         }
     }, 1000);
 }
-
 // Función para obtener una operación aleatoria para Agilidad Mental
 function getRandomOperation() {
     const operations = ['addition', 'subtraction', 'multiplication'];
@@ -337,3 +406,4 @@ function getRandomOperation() {
 window.onload = () => {
     document.getElementById('game').style.display = 'none';
 };
+
