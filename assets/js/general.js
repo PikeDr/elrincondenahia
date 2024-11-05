@@ -159,14 +159,13 @@ function getRandomInt(min, max) {
 
 // Generar opciones con la respuesta correcta y otras dos incorrectas
 function generateOptions(correctAnswer, min, max) {
-    const letters = 'abcdefghijklmnopqrstuvwxyz'.split(''); // Usar letras minúsculas
-    const options = new Set();
-    options.add(correctLetter);
+     const options = new Set();
+    options.add(correctAnswer);
 
     while (options.size < 3) {
-        const randomLetter = letters[getRandomInt(0, letters.length - 1)];
-        if (randomLetter !== correctLetter) {
-            options.add(randomLetter);
+        const option = getRandomInt(min, max * 2); // Aumentar rango para opciones incorrectas
+        if (option !== correctAnswer) {
+            options.add(option);
         }
     }
 
