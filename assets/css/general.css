@@ -13,8 +13,10 @@ body, html {
 
 .container {
     width: 100%;
-    max-width: 600px;
-    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 10px;
+
     background-color: #fefbd8;
     border-radius: 15px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
@@ -52,21 +54,24 @@ body, html {
 }
 
 .menu button, .level-selector button, .next-button, .end-button {
-    font-size: 1.5em;
+    font-size: 1.2em;
+    font-weight: 500;
     padding: 15px 25px;
-    background-color: #32cd32;
+    background-color: #f4ccd7;
     border: none;
     cursor: pointer;
     border-radius: 10px;
-    color: white;
+    color: grey;
     margin: 10px;
-    box-shadow: 0 4px #228b22;
+    box-shadow: 0 4px #ED97AF;
     width: 100%;
     max-width: 300px;
+
+    transition:all 0.5s ease;
 }
 
 .menu button:hover, .level-selector button:hover, .next-button:hover, .end-button:hover {
-    background-color: #228b22;
+    background-color: #ED97AF;
 }
 
 .menu button i, .level-selector button i {
@@ -90,23 +95,38 @@ body, html {
 .options button {
     font-size: 2em;
     padding: 15px 25px;
-    background-color: #ffcccb;
+    background-color: #f4ccd7;
+    color: grey;
     border: none;
     cursor: pointer;
     border-radius: 10px;
-    box-shadow: 0 4px #d32f2f;
+    box-shadow: 0 4px #ED97AF;
     width: 100%;
     max-width: 150px;
+
+    transition:all 0.5s ease;
 }
 
 .options button:hover {
-    background-color: #ff8a80;
+    background-color: #f4ccd7;
 }
 
+/* Estilos para el mensaje con altura fija */
 .message {
     font-size: 1.5em;
     margin-bottom: 20px;
     color: #2e8b57;
+    min-height: 50px; /* Establecer una altura mínima para evitar saltos */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.5s ease; /* Transición para suavizar la aparición y desaparición */
+    opacity: 1;
+}
+
+/* Inicialmente ocultamos el mensaje */
+.message.hidden {
+    opacity: 0;
 }
 
 .game-buttons {
@@ -129,17 +149,21 @@ body, html {
     width: 100%;
     background-color: #ddd;
     border-radius: 5px;
-    margin-bottom: 20px;
+
+    margin: 5px 20px 20 20px;
+    
     height: 20px;
     overflow: hidden;
 }
 
 .time-bar-inner {
+    
     height: 100%;
-    background-color: #4caf50;
+    background-color: #ED97AF;
     width: 100%;
     transition: width 1s linear;
 }
+
 
 
 
@@ -151,6 +175,7 @@ body, html {
 
     .profile-img {
         width: 100%;
+        max-width: 250px;
         height: 100%;
     }
 
@@ -175,3 +200,4 @@ body, html {
         height: 15px;
     }
 }
+
