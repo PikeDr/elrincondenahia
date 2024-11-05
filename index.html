@@ -14,30 +14,33 @@
 </head>
 <body>
     <div class="container">
-        <div class="title-container">
-            <img src="assets/images/imagen01.webp" alt="El rincón de Nahia" class="profile-img">
-            <h1 class="title">El rincón de Nahia</h1>
-        </div>
-        <div id="menu" class="menu">
-            <button onclick="startGame('letters')">
-                <i class="bi bi-fonts"></i> Encontrar Letras
-            </button>
-            <button onclick="startGame('numbers')">
-                <i class="bi bi-123"></i> Encontrar Números
-            </button>
-            <button onclick="startGame('addition')">
-                <i class="bi bi-plus-circle"></i> Sumas
-            </button>
-            <button onclick="startGame('subtraction')">
-                <i class="bi bi-dash-circle"></i> Restas
-            </button>
-            <!-- Nuevas secciones -->
-            <button onclick="startGame('multiplication')">
-                <i class="bi bi-x-circle"></i> Multiplicaciones
-            </button>
-            <button onclick="startGame('mentalAgility')">
-                <i class="bi bi-lightning-fill"></i> Agilidad Mental
-            </button>
+        <!-- Añadimos el id="home" aquí -->
+        <div id="home">
+            <div class="title-container">
+                <img src="assets/images/imagen01.webp" alt="El rincón de Nahia" class="profile-img">
+                <h1 class="title">El rincón de Nahia</h1>
+            </div>
+            <div id="menu" class="menu">
+                <button onclick="startGame('letters')">
+                    <i class="bi bi-fonts"></i> Encontrar Letras
+                </button>
+                <button onclick="startGame('numbers')">
+                    <i class="bi bi-123"></i> Encontrar Números
+                </button>
+                <button onclick="startGame('addition')">
+                    <i class="bi bi-plus-circle"></i> Sumas
+                </button>
+                <button onclick="startGame('subtraction')">
+                    <i class="bi bi-dash-circle"></i> Restas
+                </button>
+                <!-- Nuevas secciones -->
+                <button onclick="startGame('multiplication')">
+                    <i class="bi bi-x-circle"></i> Multiplicaciones
+                </button>
+                <button onclick="startGame('mentalAgility')">
+                    <i class="bi bi-lightning-fill"></i> Agilidad Mental
+                </button>
+            </div>
         </div>
         <!-- Resto del contenido del juego -->
         <div id="game" class="game" style="display:none;">
