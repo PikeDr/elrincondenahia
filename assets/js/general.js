@@ -367,15 +367,23 @@ function endGame() {
 }
 
 function resetGame() {
-    document.getElementById('question').textContent = '';
-    document.getElementById('options').innerHTML = '';
-    document.getElementById('options').style.display = 'none';
-    document.getElementById('progress').textContent = '';
-    document.getElementById('level-selector').style.display = 'block';
-    document.getElementById('end-game').style.display = 'none';
+
     const timeBarInner = document.getElementById('time-bar-inner');
     timeBarInner.style.width = '0%';
     timeBarInner.style.transition = 'none';
+
+    // Ocultar elementos del juego
+    document.getElementById('question').style.display = 'none';
+    document.getElementById('options').style.display = 'none';
+    document.getElementById('progress').style.display = 'none';
+    document.getElementById('time-bar').style.display = 'none';
+    document.getElementById('end-game').style.display = 'none';
+
+    // Mostrar la página de inicio
+    document.getElementById('home').style.display = 'block';
+    document.getElementById('game').style.display = 'none';
+
+    // Reiniciar variables    
     currentQuestionIndex = 0;
     score = 0;
     hasAnswered = false;
