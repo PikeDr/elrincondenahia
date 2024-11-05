@@ -189,7 +189,7 @@ function startGame(gameType) {
     document.getElementById('level-selector').style.display = 'block';
     document.getElementById('question').style.display = 'none';
     document.getElementById('options').style.display = 'none';
-    document.getElementById('end-game').style.display = 'none';
+    //document.getElementById('end-game').style.display = 'none';
     document.getElementById('message').textContent = '';
     document.getElementById('progress').textContent = '';
 }
