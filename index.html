@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>   
+<head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>El rincón de Nahia</title>
     <link rel="stylesheet" href="assets/css/general.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
 </head>
 <body>
     <div class="container">
@@ -48,7 +53,7 @@
 
             <div id="question" class="question"></div>
             <div id="options" class="options"></div>
-            <div id="message" class="message"></div>
+            <!-- <div id="message" class="message"></div> -->
 
             <!-- Añadimos la barra de progreso del tiempo -->
             <div id="time-bar" class="time-bar">
@@ -61,6 +66,8 @@
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="assets/js/general.js"></script>
 </body>
 </html>
+
