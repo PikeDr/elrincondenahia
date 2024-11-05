@@ -129,6 +129,10 @@ body, html {
     opacity: 0;
 }
 
+.game-img{
+    height: 150px;
+    border-rodius: 100%;
+
 .game-buttons {
     display: flex;
     justify-content: center;
