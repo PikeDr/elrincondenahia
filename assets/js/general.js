@@ -299,7 +299,7 @@ function checkAnswer(selected) {
             icon: 'success',
             title: '¡Correcto!',
             showConfirmButton: false,
-            timer: 2000,
+            timer: 1000,
             timerProgressBar: true,
         }).then(() => {
             nextQuestion();
@@ -310,7 +310,7 @@ function checkAnswer(selected) {
             title: 'Incorrecto',
             text: `La respuesta correcta era: ${currentQuestion.correct}`,
             showConfirmButton: false,
-            timer: 2000,
+            timer: 1000,
             timerProgressBar: true,
         }).then(() => {
             nextQuestion();
@@ -428,7 +428,7 @@ function startTimer() {
                     title: 'Tiempo agotado',
                     text: `La respuesta correcta era: ${games[currentGame][currentLevel][currentQuestionIndex].correct}`,
                     showConfirmButton: false,
-                    timer: 2000,
+                    timer: 1000,
                     timerProgressBar: true,
                 }).then(() => {
                     nextQuestion();
